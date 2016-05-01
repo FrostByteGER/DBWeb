@@ -3,15 +3,26 @@
  */
 package de.hsb.frostbyteger.core;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * @author kevin Kuegler
  * @version 1.00
  */
+@XmlRootElement
 public class User {
 
 	private String name;
 	private String email;
 	private String password;
+	
+	/**
+	 * 
+	 */
+	public User() {
+		// TODO Auto-generated constructor stub
+	}
+	
 	/**
 	 * @param name
 	 * @param email
@@ -57,6 +68,21 @@ public class User {
 	 */
 	public final void setPassword(String password) {
 		this.password = password;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null){
+			return false;
+		}else if(!(obj instanceof User)){
+			return false;
+		}else if(!((User)obj).name.equals(this.name)){
+			return false;
+		}
+		return true;
 	}
 	
 	@Override

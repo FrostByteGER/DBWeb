@@ -14,13 +14,17 @@ import de.hsb.frostbyteger.core.User;
 /** * Servlet implementation class LoginServlet */
 public class LoginServlet extends HttpServlet {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1358293869737825629L;
 	private BackendManager bm = new BackendManager();
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, java.io.IOException {
 		String url = request.getRequestURL().toString();
 		String baseURL = url.substring(0, url.length() - request.getRequestURI().length()) + request.getContextPath() + "/";
-		System.out.println(baseURL);
-		System.out.println(request.getRequestURI());
+		//System.out.println(baseURL);
+		//System.out.println(request.getRequestURI());
 		try {
 			String username = request.getParameter("username");
 			String email = "";
@@ -35,8 +39,8 @@ public class LoginServlet extends HttpServlet {
 
 			}
 
-		} catch (Throwable theException) {
-			System.out.println(theException);
+		} catch (Throwable e) {
+			e.printStackTrace();
 		}
 
 	}

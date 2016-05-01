@@ -11,32 +11,40 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.client.ClientConfig;
 
+import de.hsb.frostbyteger.core.User;
 
 public class Test {
 
-  public static void main(String[] args) {
-    ClientConfig config = new ClientConfig();
+	public static void main(String[] args) {
+		ClientConfig config = new ClientConfig();
 
-    Client client = ClientBuilder.newClient(config);
+		Client client = ClientBuilder.newClient(config);
 
-    WebTarget target = client.target(getBaseURI());
-    System.out.println(getBaseURI());
+		WebTarget target = client.target(getBaseURI());
+		String response = "NULL";
+		String plainAnswer = "NULL";
+		String htmlAnswer = "NULL";
+		String xmlAnswer = "NULL";
+		String jsonAnswer = "NULL";
 
-    String response = target.path("LoginServlet").request().accept(MediaType.TEXT_PLAIN).get(Response.class).toString();
+		// GET REQUESTS
+		response  = target.path("rest/DBManager").request().accept(MediaType.TEXT_PLAIN).get(Response.class).toString();
+		xmlAnswer = target.path("rest/DBManager").queryParam("name", "admin").request().accept(MediaType.TEXT_XML).get(User.class).toString();
 
+		System.out.println(response);
+		System.out.println(plainAnswer);
+		System.out.println(htmlAnswer);
+		System.out.println(xmlAnswer);
+		System.out.println(jsonAnswer);
 
-    String plainAnswer = target.path("LoginServlet").request().accept(MediaType.TEXT_PLAIN).get(String.class);
-//    String xmlAnswer = 
-//        target.path("rest").path("hello").request().accept(MediaType.TEXT_XML).get(String.class);
-//    String htmlAnswer= 
-//        target.path("rest").path("hello").request().accept(MediaType.TEXT_HTML).get(String.class);
+		// DELETE REQUESTS
+		response = target.path("rest/DBManager").queryParam("name", "admin").request().accept(MediaType.TEXT_PLAIN).delete().toString();
 
-    System.out.println(response);
-    System.out.println(plainAnswer);
-  }
+		System.out.println(response);
 
-  private static URI getBaseURI() {
-    return UriBuilder.fromUri("http://localhost:8080/CardGame/").build();
-  }
-} 
+	}
 
+	private static URI getBaseURI() {
+		return UriBuilder.fromUri("http://localhost:8080/CardGame/").build();
+	}
+}
