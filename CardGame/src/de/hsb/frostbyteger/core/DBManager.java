@@ -5,10 +5,19 @@ package de.hsb.frostbyteger.core;
 
 import java.util.ArrayList;
 
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+
 /**
  * @author kevin Kuegler
  * @version 1.00
  */
+@Path("DBManager")
 public class DBManager implements DAOInterface{
 	
 	private ArrayList<User> users;
@@ -25,7 +34,7 @@ public class DBManager implements DAOInterface{
 	 * @see de.hsb.frostbyteger.core.DAOInterface#addUser()
 	 */
 	@Override
-	public boolean addUser() {
+	public boolean addUser(User u) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -34,7 +43,7 @@ public class DBManager implements DAOInterface{
 	 * @see de.hsb.frostbyteger.core.DAOInterface#updateUser()
 	 */
 	@Override
-	public boolean updateUser() {
+	public boolean updateUser(User u) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -42,10 +51,11 @@ public class DBManager implements DAOInterface{
 	/* (non-Javadoc)
 	 * @see de.hsb.frostbyteger.core.DAOInterface#removeUser()
 	 */
+	@DELETE
 	@Override
-	public boolean removeUser() {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean removeUser(String name) {
+		users.remove(0);
+		return true;
 	}
 
 	/* (non-Javadoc)
@@ -78,8 +88,10 @@ public class DBManager implements DAOInterface{
 	/* (non-Javadoc)
 	 * @see de.hsb.frostbyteger.core.DAOInterface#getUser(java.lang.String)
 	 */
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
 	@Override
-	public User getUser(String name) {
+	public User getUser(@QueryParam("name")String name) {
 		if(name.isEmpty()){
 			return null;
 		}

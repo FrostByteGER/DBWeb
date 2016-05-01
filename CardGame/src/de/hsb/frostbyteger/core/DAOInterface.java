@@ -9,9 +9,9 @@ package de.hsb.frostbyteger.core;
  */
 public interface DAOInterface {
 
-	boolean addUser();
-	boolean updateUser();
-	boolean removeUser();
+	boolean addUser(User u);
+	boolean updateUser(User u);
+	boolean removeUser(String name);
 	
 	boolean addDeck(Deck d);
 	boolean updateDeck(Deck d);
