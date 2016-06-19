@@ -3,6 +3,9 @@
  */
 package de.hsb.frostbyteger.core;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.ws.rs.DELETE;
@@ -29,12 +32,36 @@ public class DBManager implements DAOInterface{
 	*/
 	public static ArrayList<User> users;
 	
+	private static String DB_TYPE = "mysql";
+	private static String DB_IP = "195.37.176.178";
+	private static String DB_PORT = "11336";
+	private static String DB_USER = "dbweb_user_09";
+	private static String DB_PW = "CntsPF";
+	
 	/**
 	 * 
 	 */
 	public DBManager() {
 		users = new ArrayList<>();
 		users.add(new User("admin","admin@server.de", "admin"));
+		
+		Connection conn = null;
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			conn = DriverManager.getConnection("jdbc:" + DB_TYPE + "://" + DB_IP + ":" + DB_PORT, DB_USER, DB_PW);
+			System.out.println(conn.getMetaData().getURL());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/* (non-Javadoc)
