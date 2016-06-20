@@ -9,10 +9,7 @@
 </head>
 <body>
 	<center>
-<%-- 		<% User currentUser = (User (session.getAttribute("currentSessionUser")));%> --%>
-<!-- 		Welcome -->
-<%-- 		<%= currentUser.getName()%> --%>
-		Welcome Administrator!
+		<% User currentUser = (User)(session.getAttribute("currentSessionUser"));%>Welcome <%= currentUser.getName()%>
 	</center>
 </body>
 </html>

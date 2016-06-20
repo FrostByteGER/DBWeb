@@ -5,11 +5,15 @@ package de.hsb.frostbyteger.core;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -22,44 +26,36 @@ import javax.ws.rs.core.MediaType;
 @Path("/DBManager")
 public class DBManager implements DAOInterface{
 	
-	/** TODO: Change to database so it is persistent. 
-	 *  Everytime a REQUEST is executed
-	 *  it will create a new instance of this class
-	 *  rendering the add and delete methods useless
-	 *  as they will only modify their local user arrays.
-	 *  The static statement makes the array globally known across
-	 *  all instances, actually making the delete and get methods useable.
-	*/
-	public static ArrayList<User> users;
-	
 	private static String DB_TYPE = "mysql";
 	private static String DB_IP = "195.37.176.178";
 	private static String DB_PORT = "11336";
+	private static String DB_SCHEMA = "dbwebanw_sose16_09";
 	private static String DB_USER = "dbweb_user_09";
 	private static String DB_PW = "CntsPF";
+	
+	private static Connection conn = null;
 	
 	/**
 	 * 
 	 */
 	public DBManager() {
-		users = new ArrayList<>();
-		users.add(new User("admin","admin@server.de", "admin"));
 		
-		Connection conn = null;
+		//If the connection already exists, dont overwrite it.
+		if(conn != null){
+			return;
+		}
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			conn = DriverManager.getConnection("jdbc:" + DB_TYPE + "://" + DB_IP + ":" + DB_PORT, DB_USER, DB_PW);
+			conn = DriverManager.getConnection("jdbc:" + DB_TYPE + "://" + DB_IP + ":" + DB_PORT + "/" + DB_SCHEMA, DB_USER, DB_PW);
 			System.out.println(conn.getMetaData().getURL());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -67,32 +63,72 @@ public class DBManager implements DAOInterface{
 	/* (non-Javadoc)
 	 * @see de.hsb.frostbyteger.core.DAOInterface#addUser()
 	 */
+	@POST
+	@Consumes(MediaType.TEXT_XML)
+	@Produces(MediaType.TEXT_PLAIN)
 	@Override
 	public boolean addUser(User u) {
-		// TODO Auto-generated method stub
-		return false;
+		int success = 0;
+		try {
+			PreparedStatement stmt = conn.prepareStatement("INSERT INTO User (Name, Email, Password) VALUES (?,?,?)");
+			stmt.setString(1, u.getName()); // Check for null
+			stmt.setString(2, u.getEmail());
+			stmt.setString(3, u.getPassword());
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			success = 0;
+		}
+		return success > 0 ? true : false;
 	}
 
 	/* (non-Javadoc)
 	 * @see de.hsb.frostbyteger.core.DAOInterface#updateUser()
+	 * //TODO: add current username as parameter
 	 */
+	@PUT
+	@Consumes(MediaType.TEXT_XML)
+	@Produces(MediaType.TEXT_PLAIN)
 	@Override
 	public boolean updateUser(User u) {
-		// TODO Auto-generated method stub
-		return false;
+		User u2 = getUser(""); 
+		int success = 0;
+		try {
+			PreparedStatement stmt = conn.prepareStatement("UPDATE User SET Name = ?, Email = ?, Password = ?, Rights = ?, Gold = ?, ActiveDeck = ? WHERE Name = ? LIMIT 1");
+			stmt.setString(1, u.getName());
+			stmt.setString(2, u.getEmail());
+			stmt.setString(3, u.getPassword());
+			stmt.setInt(4, u.getRights());
+			stmt.setInt(5, u.getGold());
+			stmt.setInt(6, u.getActiveDeck());
+			stmt.setString(7, u.getName());
+			success = stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			success = 0;
+		}
+		return success > 0 ? true : false;
 	}
 
 	/* (non-Javadoc)
 	 * @see de.hsb.frostbyteger.core.DAOInterface#removeUser()
 	 */
 	@DELETE
+	@Consumes(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.TEXT_PLAIN)
 	@Override
 	public boolean removeUser(@QueryParam("name")String name) {
+		int success = 0;
+		try {
+			PreparedStatement stmt = conn.prepareStatement("DELETE FROM User WHERE Name = ? LIMIT 1");
+			stmt.setString(1, name);
+			success = stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			success = 0;
+		}
 		
-		boolean success = users.remove(this.getUser(name));
-		System.out.println("DELETED USER");
-		System.out.println("USER SIZE: " + users.size() + "\n");
-		return success;
+		return success > 0 ? true : false;
 	}
 
 	/* (non-Javadoc)
@@ -126,22 +162,27 @@ public class DBManager implements DAOInterface{
 	 * @see de.hsb.frostbyteger.core.DAOInterface#getUser(java.lang.String)
 	 */
 	@GET
+	@Consumes(MediaType.TEXT_PLAIN)
 	@Produces(MediaType.TEXT_XML)
 	@Override
 	public User getUser(@QueryParam("name")String name) {
-		if(name.isEmpty()){
+		ResultSet resultData = null;
+		User u = null;
+		try {
+			PreparedStatement stmt = conn.prepareStatement("SELECT * FROM User WHERE Name = ? LIMIT 1");
+			stmt.setString(1, name);
+			resultData = stmt.executeQuery();
+			while(resultData.next()){
+				u = new User(resultData.getString(1), resultData.getString(2), resultData.getString(3), 
+							 resultData.getInt(4), resultData.getInt(5), resultData.getInt(6));
+				System.out.println(u.toString());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 			return null;
 		}
-		User user = null;
-		System.out.println("USER SIZE: " + users.size());
-		for(User u : users){
-			if(u.getName().equals(name)){
-				System.out.println("FOUND USER\n");
-				user = u;
-				break;
-			}
-		}
-		return user;
+		
+		return u;
 	}
 
 	/* (non-Javadoc)

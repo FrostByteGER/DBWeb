@@ -4,11 +4,11 @@ import java.net.URI;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-
 import org.glassfish.jersey.client.ClientConfig;
 
 import de.hsb.frostbyteger.core.User;
@@ -22,25 +22,57 @@ public class Test {
 
 		WebTarget target = client.target(getBaseURI());
 		String response = "NULL";
-		String plainAnswer = "NULL";
-		String htmlAnswer = "NULL";
-		String xmlAnswer = "NULL";
-		String jsonAnswer = "NULL";
-
+		User responseUser = null;
+		boolean useGET    = true;
+		boolean useINSERT = true;
+		boolean useUPDATE = false;
+		boolean useDELETE = false;
+		
 		// GET REQUESTS
-		response  = target.path("rest/DBManager").request().accept(MediaType.TEXT_PLAIN).get(Response.class).toString();
-		xmlAnswer = target.path("rest/DBManager").queryParam("name", "admin").request().accept(MediaType.TEXT_XML).get(User.class).toString();
-
-		System.out.println(response);
-		System.out.println(plainAnswer);
-		System.out.println(htmlAnswer);
-		System.out.println(xmlAnswer);
-		System.out.println(jsonAnswer);
-
+		if (useGET) {
+			System.out.println(">>>GET REQUEST<<<");
+			response = target.path("rest/DBManager").request(MediaType.TEXT_PLAIN).accept(MediaType.TEXT_XML)
+					.get(Response.class).toString();
+			responseUser = target.path("rest/DBManager").queryParam("name", "deleteDummy").request(MediaType.TEXT_PLAIN)
+					.accept(MediaType.TEXT_XML).get(User.class);
+			System.out.println(response);
+			System.out.println(responseUser);
+		}
+		
+		// INSERT REQUESTS
+		if (useINSERT) {
+			System.out.println("\n>>>INSERT REQUEST<<<");
+			User insertUser = new User("deleteDummy", "delete@dummy.com", "deleteDummy");
+			response = target.path("rest/DBManager").request(MediaType.TEXT_XML).accept(MediaType.TEXT_PLAIN)
+					.post(Entity.entity(insertUser, MediaType.TEXT_XML), Response.class).toString();
+			responseUser = target.path("rest/DBManager").queryParam("name", "deleteDummy").request()
+					.accept(MediaType.TEXT_XML).get(User.class);
+			System.out.println(response);
+			System.out.println(responseUser);
+		}
+		
+		// UPDATE REQUESTS
+		if (useUPDATE) {
+			System.out.println("\n>>>UPDATE REQUEST<<<");
+			User updateUser = new User("deleteDummy", "update@dummy.com", "UpdatedDummy");
+			response = target.path("rest/DBManager").request().accept(MediaType.TEXT_PLAIN)
+					.put(Entity.entity(updateUser, MediaType.TEXT_XML), Response.class).toString();
+			responseUser = target.path("rest/DBManager").queryParam("name", "deleteDummy").request()
+					.accept(MediaType.TEXT_XML).get(User.class);
+			System.out.println(response);
+			System.out.println(responseUser);
+		}
+		
 		// DELETE REQUESTS
-		response = target.path("rest/DBManager").queryParam("name", "admin").request().accept(MediaType.TEXT_PLAIN).delete().toString();
-
-		System.out.println(response);
+		if (useDELETE) {
+			System.out.println("\n>>>DELETE REQUEST<<<");
+			response = target.path("rest/DBManager").queryParam("name", "deleteDummy").request()
+					.accept(MediaType.TEXT_PLAIN).delete().toString();
+			responseUser = target.path("rest/DBManager").queryParam("name", "deleteDummy").request()
+					.accept(MediaType.TEXT_XML).get(User.class);
+			System.out.println(response);
+			System.out.println(responseUser);
+		}
 
 	}
 

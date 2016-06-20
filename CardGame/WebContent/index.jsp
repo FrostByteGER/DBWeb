@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type"
 	content="text/html; charset=windows-1256">
-<title>Login Page</title>
+<title>CardGame BETA</title>
 </head>
 <body>
 	<form action="LoginServlet">

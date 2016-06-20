@@ -21,8 +21,8 @@ public class LoginServlet extends HttpServlet {
 	private BackendManager bm = new BackendManager();
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, java.io.IOException {
-		String url = request.getRequestURL().toString();
-		String baseURL = url.substring(0, url.length() - request.getRequestURI().length()) + request.getContextPath() + "/";
+		//String url = request.getRequestURL().toString();
+		//String baseURL = url.substring(0, url.length() - request.getRequestURI().length()) + request.getContextPath() + "/";
 		//System.out.println(baseURL);
 		//System.out.println(request.getRequestURI());
 		try {
@@ -33,7 +33,12 @@ public class LoginServlet extends HttpServlet {
 			if (bm.loginUser(user)) {
 				HttpSession session = request.getSession(true);
 				session.setAttribute("currentSessionUser", user);
-				response.sendRedirect("UserLoggedIn.jsp");
+				if(user.getName() == "admin"){
+					response.sendRedirect("UserLoggedIn.jsp");
+				}else{
+					response.sendRedirect("UserLoggedIn.jsp");
+				}
+				
 			} else {
 				response.sendRedirect("InvalidLogin.jsp");
 

@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type"
 	content="text/html; charset=windows-1256">
-<title>User Logged Successfully</title>
+<title>Invalid Username or Password!</title>
 </head>
 <body>
 	<center>
