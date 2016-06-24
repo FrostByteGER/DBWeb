@@ -9,7 +9,7 @@ import java.util.Set;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-import de.hsb.frostbyteger.core.DBManager;
+import de.hsb.frostbyteger.core.BackendManager;
 
 /**
  * @author kevin Kuegler
@@ -32,7 +32,7 @@ public class RestService extends Application {
 	@Override
 	public Set<Class<?>> getClasses() {
 		final Set<Class<?>> returnValue = new HashSet<Class<?>>( );
-		returnValue.add( DBManager.class );
+		returnValue.add( BackendManager.class );
 		return returnValue;
 	}
 }

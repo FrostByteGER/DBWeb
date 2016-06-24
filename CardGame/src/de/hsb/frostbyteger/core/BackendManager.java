@@ -3,53 +3,73 @@
  */
 package de.hsb.frostbyteger.core;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+
 /**
  * @author kevin Kuegler
  * @version 1.00
  */
+@Path("/BDManager")
 public class BackendManager implements BusinessInterface{
 
-	private DBManager dbm;
-	
 	/**
 	 * 
 	 */
 	public BackendManager() {
-		dbm = new DBManager();
+
 	}
 	
 	/* (non-Javadoc)
 	 * @see de.hsb.frostbyteger.core.BusinessInterface#registerUser(de.hsb.frostbyteger.core.User)
 	 */
+	@POST
+	@Consumes(MediaType.TEXT_XML)
+	@Produces(MediaType.TEXT_PLAIN)
 	@Override
-	public boolean registerUser(User u) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean registerUser(@Context HttpServletRequest req, User u) {
+		DBManager dbm = getDBManager(req);
+		return dbm.addUser(u);
 	}
 
 	/* (non-Javadoc)
 	 * @see de.hsb.frostbyteger.core.BusinessInterface#deleteUser(java.lang.String)
 	 */
+	@DELETE
+	@Consumes(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.TEXT_PLAIN)
 	@Override
-	public boolean deleteUser(String name) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean deleteUser(@Context HttpServletRequest req, @QueryParam("name")String name) {
+		DBManager dbm = getDBManager(req);
+		req.getSession().getAttribute("");
+		return dbm.removeUser(name);
 	}
 
 	/* (non-Javadoc)
 	 * @see de.hsb.frostbyteger.core.BusinessInterface#updateUser(de.hsb.frostbyteger.core.User)
 	 */
+	@PUT
+	@Consumes(MediaType.TEXT_XML)
+	@Produces(MediaType.TEXT_PLAIN)
 	@Override
-	public boolean updateUser(User u) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean updateUser(@Context HttpServletRequest req, User u, @QueryParam("name")String currentName) {
+		DBManager dbm = getDBManager(req);
+		return dbm.updateUser(u, currentName);
 	}
 
 	/* (non-Javadoc)
 	 * @see de.hsb.frostbyteger.core.BusinessInterface#loginUser(de.hsb.frostbyteger.core.User)
 	 */
-	@Override
-	public boolean loginUser(User u) {
+	public boolean loginUser( HttpServletRequest req, User u) {
+		DBManager dbm = getDBManager(req);
 		if(u == null){
 			return false;
 		}
@@ -65,7 +85,7 @@ public class BackendManager implements BusinessInterface{
 	 * @see de.hsb.frostbyteger.core.BusinessInterface#logoutUser(de.hsb.frostbyteger.core.User)
 	 */
 	@Override
-	public boolean logoutUser(User u) {
+	public boolean logoutUser(@Context HttpServletRequest req, User u) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -95,6 +115,10 @@ public class BackendManager implements BusinessInterface{
 	public Card getCard(String id) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	private DBManager getDBManager(HttpServletRequest req){
+		return (DBManager) req.getServletContext().getAttribute("DBManager");
 	}
 
 }

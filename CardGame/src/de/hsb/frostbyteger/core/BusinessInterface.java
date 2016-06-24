@@ -3,6 +3,8 @@
  */
 package de.hsb.frostbyteger.core;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author kevin Kuegler
  * @version 1.00
@@ -10,12 +12,12 @@ package de.hsb.frostbyteger.core;
 public interface BusinessInterface {
 
 	
-	boolean registerUser(User u);
-	boolean deleteUser(String name);
-	boolean updateUser(User u);
+	boolean registerUser(HttpServletRequest req, User u);
+	boolean deleteUser(HttpServletRequest req, String name);
+	boolean updateUser(HttpServletRequest req, User u, String currentName);
 	
-	boolean loginUser(User u);
-	boolean logoutUser(User u);
+	boolean loginUser(HttpServletRequest req, User u);
+	boolean logoutUser(HttpServletRequest req, User u);
 	
 	boolean buyCard(String id, User u, int amount);
 	boolean sellCard(String id, User u, int amount);

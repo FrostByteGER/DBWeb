@@ -8,7 +8,7 @@
 <title>CardGame BETA</title>
 </head>
 <body>
-	<form action="LoginServlet">
+	<form method="post" action="Login">
 		Please enter your username 
 		<input type="text" name="username" /><br>
 		Please enter your password 

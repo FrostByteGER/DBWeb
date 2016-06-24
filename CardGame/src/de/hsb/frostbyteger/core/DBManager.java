@@ -10,10 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -33,18 +30,12 @@ public class DBManager implements DAOInterface{
 	private static String DB_USER = "dbweb_user_09";
 	private static String DB_PW = "CntsPF";
 	
-	private static Connection conn = null;
+	private Connection conn = null;
 	
 	/**
 	 * 
 	 */
 	public DBManager() {
-		
-		//If the connection already exists, dont overwrite it.
-		if(conn != null){
-			return;
-		}
-		
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			conn = DriverManager.getConnection("jdbc:" + DB_TYPE + "://" + DB_IP + ":" + DB_PORT + "/" + DB_SCHEMA, DB_USER, DB_PW);
@@ -63,9 +54,6 @@ public class DBManager implements DAOInterface{
 	/* (non-Javadoc)
 	 * @see de.hsb.frostbyteger.core.DAOInterface#addUser()
 	 */
-	@POST
-	@Consumes(MediaType.TEXT_XML)
-	@Produces(MediaType.TEXT_PLAIN)
 	@Override
 	public boolean addUser(User u) {
 		int success = 0;
@@ -84,14 +72,9 @@ public class DBManager implements DAOInterface{
 
 	/* (non-Javadoc)
 	 * @see de.hsb.frostbyteger.core.DAOInterface#updateUser()
-	 * //TODO: add current username as parameter
 	 */
-	@PUT
-	@Consumes(MediaType.TEXT_XML)
-	@Produces(MediaType.TEXT_PLAIN)
 	@Override
-	public boolean updateUser(User u) {
-		User u2 = getUser(""); 
+	public boolean updateUser(User u, String currentUser) {
 		int success = 0;
 		try {
 			PreparedStatement stmt = conn.prepareStatement("UPDATE User SET Name = ?, Email = ?, Password = ?, Rights = ?, Gold = ?, ActiveDeck = ? WHERE Name = ? LIMIT 1");
@@ -101,7 +84,7 @@ public class DBManager implements DAOInterface{
 			stmt.setInt(4, u.getRights());
 			stmt.setInt(5, u.getGold());
 			stmt.setInt(6, u.getActiveDeck());
-			stmt.setString(7, u.getName());
+			stmt.setString(7, currentUser);
 			success = stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -113,11 +96,8 @@ public class DBManager implements DAOInterface{
 	/* (non-Javadoc)
 	 * @see de.hsb.frostbyteger.core.DAOInterface#removeUser()
 	 */
-	@DELETE
-	@Consumes(MediaType.TEXT_PLAIN)
-	@Produces(MediaType.TEXT_PLAIN)
 	@Override
-	public boolean removeUser(@QueryParam("name")String name) {
+	public boolean removeUser(String name) {
 		int success = 0;
 		try {
 			PreparedStatement stmt = conn.prepareStatement("DELETE FROM User WHERE Name = ? LIMIT 1");
@@ -202,5 +182,23 @@ public class DBManager implements DAOInterface{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	public boolean closeConnection(){
+		try {
+			conn.close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#finalize()
+	 */
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+		closeConnection();
+	}	
 }
