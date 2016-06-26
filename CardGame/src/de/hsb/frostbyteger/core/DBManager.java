@@ -155,7 +155,7 @@ public class DBManager implements DAOInterface{
 			while(resultData.next()){
 				u = new User(resultData.getString(1), resultData.getString(2), resultData.getString(3), 
 							 resultData.getInt(4), resultData.getInt(5), resultData.getInt(6));
-				System.out.println(u.toString());
+				System.out.println("REQUESTED USER DATA: " + u.toString());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

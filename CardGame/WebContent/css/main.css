@@ -1,0 +1,114 @@
+@import url(http://fonts.googleapis.com/
+	css?family=Exo:400,800&subset=latin,
+	latin-ext);
+
+body{
+	margin: 0;
+	background-color: #471515;
+	background-position: center;
+	background-attachment: fixed;
+	background-repeat: no-repeat;
+	font-family: 'Exo', sans-serif;
+	color: #ddd;
+	text-align: center;
+}
+
+h1,h2{
+	margin: 0;
+	padding: 0;
+}
+
+p{
+	margin: 0;
+	padding: 0;
+}
+
+input,button{
+	font-family: 'Exo', sans-serif;
+}
+
+#main{
+	width: 750px;
+	margin: 50 auto 0 auto;
+}
+
+#logo{
+	
+}
+
+#text{
+	width: 100%;
+	margin-top: 10px;
+	padding-bottom: 10px; 
+	background-color: rgba(50, 50, 50, 0.75);
+	border-radius: 5px;
+}
+
+#textfeld,#button{
+	margin: 2px;
+	width: 120px;
+}
+
+#buttonIngame{
+	width: 250px;
+	height: 50px;
+	margin: 20px;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+#cards{
+	width: 700px;
+	height: 330px;
+	margin: 0 auto 25px auto;
+	background-color: rgba(50, 50, 50, 0.75);
+	border-radius: 5px;
+	overflow: auto;
+}
+
+#card{
+	width: 100px;
+	height: 150px;
+	margin: 10px 0 0 10px;
+	border-radius: 5px;
+	float: left;
+}
+
+#cardPic{
+	width: 80px;
+	height: 80px;
+	margin: 10px;
+}
+
+#lowerPart{
+	width: 700px;
+	height: 170px;
+	margin: 0 auto 25px auto; 
+}
+
+#decks{
+	width: 500px;
+	height: 100%;
+	margin-right: 25px;
+	background-color: rgba(50, 50, 50, 0.75);
+	border-radius: 5px;
+	float: left;
+	overflow-x: auto;
+}
+
+#deckNameField{
+	width: 80px;
+	margin: 10px;
+}
+
+#deckButtons{
+	width: 175px;
+	float: left;
+}
+
+#dButton{
+	width: 100%;
+	height: 70px;
+	font-size: 20px;
+	font-weight: bold;
+}

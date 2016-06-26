@@ -86,7 +86,7 @@ public class BackendManager implements BusinessInterface{
 	 */
 	@Override
 	public boolean logoutUser(@Context HttpServletRequest req, User u) {
-		// TODO Auto-generated method stub
+		//TODO: Remove or use, currently handled by LogoutServlet
 		return false;
 	}
 

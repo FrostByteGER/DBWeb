@@ -1,19 +1,29 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+	pageEncoding="utf-8"%>
 <html>
-<head>
-<meta http-equiv="Content-Type"
-	content="text/html; charset=windows-1256">
-<title>CardGame BETA</title>
-</head>
-<body>
-	<form method="post" action="Login">
-		Please enter your username 
-		<input type="text" name="username" /><br>
-		Please enter your password 
-		<input type="text" name="password" /> 
-		<input type="submit" value="submit">
-	</form>
-</body>
+	<head>
+		<title>The CardGame</title>
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css" media="screen">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	</head>
+	<body>
+		<div id="main">
+			<div id="logo">
+				<h1>THE CARDGAME</h1>
+			</div>
+			<div id="text">
+				<h2>Willkommen, Willkommen!</h2>
+				<p>Gebe hier deine Account-Daten ein, 
+				<br>um das Spiel zu beginnen!</p>
+				<form method="post" action="Login">
+					<br><input type="text" id="textfeld" placeholder="Username" name="username"></input>
+					<br><input type="password" id="textfeld" placeholder="Passwort" name="password"></input>
+					<br><button id="button" name="login">Login</button>
+				</form>
+				<form method="post" action="Register">
+					<br><button id="button" name="register">Registrieren</button>
+				</form>
+			</div>
+		</div>
+	</body>
 </html>
