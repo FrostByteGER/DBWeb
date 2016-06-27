@@ -21,7 +21,7 @@
 					<br><button id="button" name="login">Login</button>
 				</form>
 				<form method="post" action="Register">
-					<br><button id="button" name="register">Registrieren</button>
+					<button id="button" name="register">Registrieren</button>
 				</form>
 			</div>
 		</div>

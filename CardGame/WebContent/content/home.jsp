@@ -14,11 +14,15 @@
 				<% User currentUser = (User)(session.getAttribute("currentSessionUser"));%>Willkommen zurück, <%= currentUser.getName()%>
 			</div>
 			<div id="text">
-				<br><button id="buttonIngame" name="startGame">Spiel starten</button>
-				<br><button id="buttonIngame" name="buildDeck">Deck bauen</button>
+				<form method="get" action="playGame">
+					<button id="buttonIngame" name="startGame">Spiel starten</button>
+				</form>
+				<form method="get" action="createDeck">
+					<button id="buttonIngame" name="buildDeck">Deck bauen</button>
+				</form>
 				<br><button id="buttonIngame" name="gotoShop">Shop</button>
 				<form method="post" action="Logout">
-					<br><button id="buttonIngame" name="logout">Logout</button>
+					<button id="buttonIngame" name="logout">Logout</button>
 				</form>
 			</div>
 		</div>

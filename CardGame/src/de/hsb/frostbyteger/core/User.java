@@ -18,7 +18,7 @@ public class User {
 	private int rights;
 	private int gold;
 	private int activeDeck;
-	
+
 	/**
 	 * 
 	 */
@@ -28,8 +28,9 @@ public class User {
 		this.password = name;
 		this.rights = 0;
 		this.gold = 0;
-		this.activeDeck = -1;	}
-	
+		this.activeDeck = -1;
+	}
+
 	/**
 	 * @param name
 	 * @param email
@@ -42,8 +43,9 @@ public class User {
 		this.rights = 0;
 		this.gold = 0;
 		this.activeDeck = -1;
-		
+
 	}
+
 	/**
 	 * @param name
 	 * @param email
@@ -67,37 +69,45 @@ public class User {
 	public final String getName() {
 		return name;
 	}
+
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public final void setName(String name) {
 		this.name = name;
 	}
+
 	/**
 	 * @return the email
 	 */
 	public final String getEmail() {
 		return email;
 	}
+
 	/**
-	 * @param email the email to set
+	 * @param email
+	 *            the email to set
 	 */
 	public final void setEmail(String email) {
 		this.email = email;
 	}
+
 	/**
 	 * @return the password
 	 */
 	public final String getPassword() {
 		return password;
 	}
+
 	/**
-	 * @param password the password to set
+	 * @param password
+	 *            the password to set
 	 */
 	public final void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	/**
 	 * @return the rights
 	 */
@@ -106,7 +116,8 @@ public class User {
 	}
 
 	/**
-	 * @param rights the rights to set
+	 * @param rights
+	 *            the rights to set
 	 */
 	public final void setRights(int rights) {
 		this.rights = rights;
@@ -120,7 +131,8 @@ public class User {
 	}
 
 	/**
-	 * @param gold the gold to set
+	 * @param gold
+	 *            the gold to set
 	 */
 	public final void setGold(int gold) {
 		this.gold = gold;
@@ -134,30 +146,34 @@ public class User {
 	}
 
 	/**
-	 * @param activeDeck the activeDeck to set
+	 * @param activeDeck
+	 *            the activeDeck to set
 	 */
 	public final void setActiveDeck(int activeDeck) {
 		this.activeDeck = activeDeck;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if(obj == null){
+		if (obj == null) {
 			return false;
-		}else if(!(obj instanceof User)){
+		} else if (!(obj instanceof User)) {
 			return false;
-		}else if(!((User)obj).name.equals(this.name)){
+		} else if (!((User) obj).name.equals(this.name)) {
 			return false;
 		}
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Username: " + name + " Email: " + email + " Password: " + password + " Rights: " + rights + " Gold: " + gold + " Active Deck: " + activeDeck; 
+		return "Username: " + name + " Email: " + email + " Password: " + password + " Rights: " + rights + " Gold: "
+				+ gold + " Active Deck: " + activeDeck;
 	}
 
 }

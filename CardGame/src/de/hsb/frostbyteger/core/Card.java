@@ -13,28 +13,27 @@ public class Card {
 
 	
 	private String name;
-	private String ID;
 	private int atk;
 	private int def;
+	private int mana;
+	private String tribe;
 	private int cost;
-	//TODO: change to custom image class
-	private Image image;
-	
+
 	/**
 	 * @param name
-	 * @param iD
 	 * @param atk
 	 * @param def
+	 * @param mana
+	 * @param tribe
 	 * @param cost
-	 * @param image
 	 */
-	public Card(String name, String iD, int atk, int def, int cost, Image image) {
+	public Card(String name, int atk, int def, int mana, String tribe, int cost) {
 		this.name = name;
-		ID = iD;
 		this.atk = atk;
 		this.def = def;
+		this.mana = mana;
+		this.tribe = tribe;
 		this.cost = cost;
-		this.image = image;
 	}
 	/**
 	 * @return the name
@@ -84,22 +83,29 @@ public class Card {
 	public final void setCost(int cost) {
 		this.cost = cost;
 	}
+	
 	/**
-	 * @return the image
+	 * @return the mana
 	 */
-	public final Image getImage() {
-		return image;
+	public final int getMana() {
+		return mana;
 	}
 	/**
-	 * @param image the image to set
+	 * @param mana the mana to set
 	 */
-	public final void setImage(Image image) {
-		this.image = image;
+	public final void setMana(int mana) {
+		this.mana = mana;
 	}
 	/**
-	 * @return the iD
+	 * @return the tribe
 	 */
-	public final String getID() {
-		return ID;
+	public final String getTribe() {
+		return tribe;
+	}
+	/**
+	 * @param tribe the tribe to set
+	 */
+	public final void setTribe(String tribe) {
+		this.tribe = tribe;
 	}
 }

@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -116,8 +117,18 @@ public class DBManager implements DAOInterface{
 	 */
 	@Override
 	public boolean addDeck(Deck d) {
-		// TODO Auto-generated method stub
-		return false;
+		int success = 0;
+		try{
+			PreparedStatement stmt = conn.prepareStatement("INSERT INTO Deck (Name, Playable, UserName) VALUES (?,?,(SELECT Name FROM User WHERE Name = ?))");
+			stmt.setString(1, d.getName());
+			stmt.setBoolean(2, d.isPlayable());
+			stmt.setString(3, d.getUser());
+			success = stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			success = 0;
+		}
+		return success > 0 ? true : false;
 	}
 
 	/* (non-Javadoc)
@@ -125,17 +136,36 @@ public class DBManager implements DAOInterface{
 	 */
 	@Override
 	public boolean updateDeck(Deck d) {
-		// TODO Auto-generated method stub
-		return false;
+		int success = 0;
+		try {
+			PreparedStatement stmt = conn.prepareStatement("UPDATE Deck SET Name = ?, Playable = ?, UserName = (SELECT Name FROM User WHERE Name = ?) LIMIT 1");
+			stmt.setString(1, d.getName());
+			stmt.setBoolean(2, d.isPlayable());
+			stmt.setString(3, d.getUser());
+			success = stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			success = 0;
+		}
+		return success > 0 ? true : false;
 	}
 
 	/* (non-Javadoc)
 	 * @see de.hsb.frostbyteger.core.DAOInterface#removeDeck(java.lang.String)
 	 */
 	@Override
-	public boolean removeDeck(String id) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean removeDeck(int id) {
+		int success = 0;
+		try {
+			PreparedStatement stmt = conn.prepareStatement("DELETE FROM Deck WHERE ID = ? LIMIT 1");
+			stmt.setInt(1, id);
+			success = stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			success = 0;
+		}
+		
+		return success > 0 ? true : false;
 	}
 
 	/* (non-Javadoc)
@@ -169,19 +199,157 @@ public class DBManager implements DAOInterface{
 	 * @see de.hsb.frostbyteger.core.DAOInterface#getCard(java.lang.String)
 	 */
 	@Override
-	public Card getCard(String id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Card getCard(String name) {
+		ResultSet resultData = null;
+		Card c = null;
+		try {
+			PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Card WHERE Name = ? LIMIT 1");
+			resultData = stmt.executeQuery();
+			while(resultData.next()){
+				c = new Card(resultData.getString(1), resultData.getInt(2), resultData.getInt(3), resultData.getInt(4), resultData.getString(5), resultData.getInt(6));
+				System.out.println("REQUESTED CARD DATA: " + c.toString());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		//
+		return c;
 	}
 
 	/* (non-Javadoc)
 	 * @see de.hsb.frostbyteger.core.DAOInterface#getDeck(java.lang.String)
 	 */
 	@Override
-	public Deck getDeck(String id) {
-		// TODO Auto-generated method stub
+	public Deck getDeck(int id) {
+		ResultSet resultData = null;
+		Deck d = null;
+		try {
+			PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Deck WHERE Deck.ID = ? LIMIT 1");
+			stmt.setInt(1, id);
+			resultData = stmt.executeQuery();
+			while(resultData.next()){
+				d = new Deck(resultData.getString(2), resultData.getInt(1), null, null, resultData.getString(4), resultData.getBoolean(3));
+				System.out.println("REQUESTED DECK DATA: " + d.toString());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return d;
+	}
+
+	/* (non-Javadoc)
+	 * @see de.hsb.frostbyteger.core.DAOInterface#addCardToUser(java.lang.String, java.lang.String, int)
+	 */
+	@Override
+	public boolean addCardToUser(String name, String cardName, int amount) {
+		int success = 0;
+		try {
+			PreparedStatement stmt = conn.prepareStatement("INSERT INTO User_has_Card (User_Name, Card_Name, Amount) VALUES(?,?,?)");
+			stmt.setString(1, name);
+			stmt.setString(2, cardName);
+			stmt.setInt(3, amount);
+			success = stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			success = 0;
+		}
+		return success > 0 ? true : false;
+	}
+
+	/* (non-Javadoc)
+	 * @see de.hsb.frostbyteger.core.DAOInterface#addCardToDeck(int, java.lang.String, int)
+	 */
+	@Override
+	public boolean addCardToDeck(int deckID, String cardName, int amount) {
+		int success = 0;
+		try {
+			PreparedStatement stmt = conn.prepareStatement("INSERT INTO Deck_has_Card (Deck_ID, Card_Name, Amount) VALUES(?,?,?)");
+			stmt.setInt(1, deckID);
+			stmt.setString(2, cardName);
+			stmt.setInt(3, amount);
+			success = stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			success = 0;
+		}
+		return success > 0 ? true : false;
+	}
+
+	/* (non-Javadoc)
+	 * @see de.hsb.frostbyteger.core.DAOInterface#setActiveDeck(int)
+	 */
+	@Override
+	public boolean setActiveDeck(String name, int deckID) {
+		int success = 0;
+		try {
+			PreparedStatement stmt = conn.prepareStatement("UPDATE User SET ActiveDeck = ? WHERE Name = ? LIMIT 1");
+			stmt.setInt(1, deckID);
+			stmt.setString(2, name);
+			success = stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			success = 0;
+		}
+		return success > 0 ? true : false;
+	}
+
+	/* (non-Javadoc)
+	 * @see de.hsb.frostbyteger.core.DAOInterface#getPlayerCard(java.lang.String)
+	 */
+	@Override
+	public ArrayList<Card> getPlayerCards(String username) {
+		ResultSet resultData = null;
+		ArrayList<Card> cards = new ArrayList<>();
+		try {
+			PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Card INNER JOIN User_has_Card ON User_has_Card.User_Name= ? GROUP BY Name");
+			stmt.setString(1, username);
+			resultData = stmt.executeQuery();
+			while(resultData.next()){
+				Card c = new Card(resultData.getString(1), resultData.getInt(2), resultData.getInt(3), resultData.getInt(4), resultData.getString(5), resultData.getInt(6));
+				cards.add(c);
+				System.out.println("REQUESTED CARD DATA: " + c.toString());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		//
+		return cards;
+	}
+
+	/* (non-Javadoc)
+	 * @see de.hsb.frostbyteger.core.DAOInterface#getActivePlayerDeck(java.lang.String)
+	 */
+	@Override
+	public Deck getActivePlayerDeck(String username) {
 		return null;
 	}
+
+	/* (non-Javadoc)
+	 * @see de.hsb.frostbyteger.core.DAOInterface#getPlayerDecks(java.lang.String)
+	 */
+	@Override
+	public ArrayList<Deck> getPlayerDecks(String username) {
+		ResultSet resultData = null;
+		ArrayList<Deck> decks = new ArrayList<>();
+		try {
+			PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Deck WHERE Deck.UserName = ?");
+			stmt.setString(1, username);
+			resultData = stmt.executeQuery();
+			while(resultData.next()){
+				Deck d = new Deck(resultData.getString(2), resultData.getInt(1), null, null, resultData.getString(4), resultData.getBoolean(3));
+				decks.add(d);
+				System.out.println("REQUESTED CARD DATA: " + d.toString());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		//
+		return decks;
+	}	
 	
 	public boolean closeConnection(){
 		try {
@@ -200,5 +368,5 @@ public class DBManager implements DAOInterface{
 	protected void finalize() throws Throwable {
 		super.finalize();
 		closeConnection();
-	}	
+	}
 }
